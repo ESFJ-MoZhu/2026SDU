@@ -1,0 +1,31 @@
+{
+  "name": "poseidon2-circom-zh",
+  "version": "1.0.0",
+  "description": "使用Circom实现的Poseidon2哈希算法零知识证明电路",
+  "main": "test.js",
+  "scripts": {
+    "compile": "echo '编译电路...' && circom poseidon2.circom --r1cs --wasm --sym",
+    "setup": "echo '设置证明系统...' && npm run download-ptau && npm run generate-keys",
+    "download-ptau": "echo '下载Powers of Tau文件...' && wget -O pot12_final.ptau https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_12.ptau || curl -o pot12_final.ptau https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_12.ptau",
+    "generate-keys": "echo '生成密钥...' && snarkjs groth16 setup poseidon2.r1cs pot12_final.ptau poseidon2_0000.zkey && snarkjs zkey contribute poseidon2_0000.zkey poseidon2_0001.zkey --name='第一次贡献' -v && snarkjs zkey export verificationkey poseidon2_0001.zkey verification_key.json",
+    "test": "echo '运行测试...' && node test.js",
+    "build": "echo '开始构建项目...' && npm run compile && npm run setup && echo '构建完成！'",
+    "clean": "echo '清理临时文件...' && rm -f *.r1cs *.wasm *.sym *.zkey verification_key.json pot12_final.ptau"
+  },
+  "dependencies": {
+    "circomlib": "^2.0.5",
+    "snarkjs": "^0.7.0"
+  },
+  "devDependencies": {
+    "circom": "^2.1.6"
+  },
+  "keywords": [
+    "poseidon2",
+    "circom",
+    "零知识证明",
+    "哈希算法",
+    "groth16"
+  ],
+  "author": "ESFJ-MoZhu",
+  "license": "MIT"
+}
